@@ -1,0 +1,24 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2023-06-08T14:43:24-07:00",
+  "id": "how-to-use-graphite",
+  "duration": 7,
+  "title": "How to Use Graphite",
+  "authors": "Walker Hildebrand",
+  "summary": "How to use Graphite",
+  "source": "how-to-use-graphite.md",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "tools"
+  ],
+  "tags": [
+    "medium"
+  ],
+  "url": "how-to-use-graphite"
+}

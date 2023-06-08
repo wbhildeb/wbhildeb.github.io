@@ -1,6 +1,168 @@
-<!DOCTYPE html>
-<h1>Walker Hildebrand</h1>
-<h2>Links</h2>
-<a href="/docs/resume.pdf">Resume</a>
-<a href="https://github.com/wbhildeb/" target=0>GitHub</a>
-<a href="https://www.linkedin.com/in/wbhildeb/" target=0>LinkedIn</a>
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>How to Use Graphite</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="how-to-use-graphite"
+                  title="How to Use Graphite"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Overview" duration="1">
+        <h2 is-upgraded>My Assumptions</h2>
+<ul>
+<li>You are familiar with basic git concepts and terminology.</li>
+</ul>
+<h2 class="checklist" is-upgraded>What You&#39;ll Learn</h2>
+<ul class="checklist">
+<li>The use case of graphite</li>
+<li>How to install</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The Problem" duration="2">
+        <h2 is-upgraded>The Problem</h2>
+<p>Digesting a giant pull request can take a ton of time to contextualize what you&#39;re reviewing - especially if you have to context-switch mid-review.</p>
+<p>Feeling blocked because you want to work on a feature, but are waiting for your pull request to be merged into <code>main</code> also sucks.</p>
+<p>Often we&#39;ll end up submitting some <code>feature_1</code> that we want pushed through to <code>main</code>, so we can branch off of <code>main</code> again and keep working some on <code>feature_2</code> that is dependent on the earlier code. We&#39;re blocked, and so maybe we get a rushed review, especially if its a large chunk of code that no one wants to digest.</p>
+<p>And that&#39;s the problem. But that&#39;s not how code review should be.</p>
+<h2 is-upgraded>The Solution (aka El Problema)</h2>
+<p>The solution is somewhat obvious, and I&#39;m sure some of you do this already. Make a branch off of <code>feature_1_branch</code>, call it something clever like <code>feature_2_branch</code> and submit a pull request to merge feature_2 into feature_1. Cool, you&#39;re un-blocked.</p>
+<p>Except that&#39;s not the solution! I mean it is, but you still have giant pull requests and everyone that has to review your code still hates you. In an effort to be loved, you make them bite-sized. Cute little code snippets that are easy to review. And now your feature is composed of 30 branches, and you&#39;re in rebasing/merging hell when you try to implement feedback from those code reviews. <strong>El Problema!</strong></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="What is Graphite?" duration="3">
+        <h2 is-upgraded>What is it?</h2>
+<p>A command line tool <code>gt</code> which wraps git. Also, a website for PRs like GitHub - but that part is optional (I don&#39;t use it).</p>
+<h2 is-upgraded>What does it do?</h2>
+<p>It introduces the concept of <em>stacks</em> and adds utilities for them. A stack is a tree of dependent branches.</p>
+<p>If your feature requires 30 small changes, then each of those changes will be its own branch, and you can structure those changes as a tree (often just a straight line of dependencies).</p>
+<p class="image-container"><img alt="a simple stack with 3" src="img/fa696cbddde4db5f.png"></p>
+<p>Above is a list of my branches which are tracked by graphite. I have one main stack with many branches, and two other experimental stacks which are just a single branch. When I develop a new part of my feature, I add it onto the top of the main stack. If I start some other project, I&#39;ll start a new stack off of main.</p>
+<p>The difference between this and <strong>El Problema</strong> (rebase hell), is that if you make a change somewhere in the middle of your stack, Graphite will <em>restack</em> all of the branches which are <em>upstack</em> of that change. Esentially, it does all of that tedious rebasing for you, propogating changes upwards through the stack.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Graphite Development Flow" duration="0">
+        <p><strong>Stop merging!</strong> You&#39;re a rebaser now.</p>
+<p><strong>Stop rebasing!</strong> Let Graphite handle all of that for you. It&#39;s helpful to understand the magic that Graphite is performing (especially if you mess something up), so learn a bit about rebasing if you haven&#39;t used it before.</p>
+<p><strong>Make small, digestable commits!</strong> Easy to review means easy to merge.</p>
+<p><strong>One commit per branch!</strong> Amend and squash are your friends. This may seem odd, but when you rebase/restack (which happens a lot when using Graphite) you may need to deal with some merge conflicts. The rebasing essentially patches each commit on top of eachother, so the fewer commits which have conflicts, the less you&#39;ll have to deal with merge issues.</p>
+<p><strong>Tidy up!</strong> Keep your git status clean, more navigating branches and more rebasing means you&#39;re not going to be able to hold on to a bunch of uncommitted file changes. Stash if you need to, or better yet commit them!</p>
+<p><strong>Code now, branch later!</strong> With Graphite, it is very easy to code on some base branch - like main, or the top of your stack. When you&#39;re ready to commit, you can then take all of those changes and commit them onto a new branch once you&#39;re ready to do so. <code>gt branch create --all --message "feat: some small change"</code> will take all of your changes, create and name a new branch, commit the changes with the given message, stack the new branch onto your current one, and then checkout the new branch.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="How to Get Setup" duration="1">
+        <p><a href="https://graphite.dev/docs/installing-the-cli" target="_blank">Install</a></p>
+<p><a href="https://graphite.dev/docs/authenticating-the-cli" target="_blank">Authenticate</a></p>
+<h2 is-upgraded>Configuration</h2>
+<p>Using graphite in your repo will prompt you to specify the trunk branch and ask if you want to track current branches. Make sure to set the correct trunk branch (usually <code>main</code> or <code>master</code>) and specify that you&#39;d like to track branches.</p>
+<p>Setup tab completion with <code>gt completion</code> for bash/zsh, or <code>gt fish</code> for fish.</p>
+<p>Configure the auto-naming of branches with:</p>
+<ul>
+<li><code>gt user branch-prefix --set [prefix]</code> or <code>gt user branch-prefix --reset</code> to set the prefix</li>
+<li><code>gt user branch-date</code> to toggle whether to include date in branch names</li>
+</ul>
+<p><code>gt user --help</code> will show more configuration options</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Basic Command Reference" duration="0">
+        <h2 is-upgraded>Scopes</h2>
+<p>Graphite commands are nicely organized by the scope on which they operate. Namely,</p>
+<ul>
+<li><code>gt {stack, upstack, downstack}</code></li>
+<li><code>gt branch</code></li>
+<li><code>gt commit</code></li>
+<li><code>gt repo</code></li>
+<li><code>gt log</code></li>
+</ul>
+<h2 is-upgraded>stack</h2>
+<p>The stack-based scopes have mostly the same commands, with some exceptions, but:</p>
+<ul>
+<li><code>stack</code> affects the current branch, its <em>ancestors</em> and its <em>descendants</em>. alias <code>gt s</code></li>
+<li><code>upstack</code> affects the current branch and <em>descendants</em>. alias <code>gt us</code></li>
+<li><code>downstack</code> affects the current branch and <em>ancestors</em>. alias <code>gt ds</code></li>
+</ul>
+<p><code>gt {stack,upstack,downstack} submit</code>: Create linked pull requests for all of the branches in the specified scope</p>
+<p><code>gt {stack,upstack,downstack} restack</code>: Ensure each branch in the scope is based on its parent, rebasing if necessary</p>
+<p><code>gt upstack onto [branch]</code>: Rebase the current branch and its ancestors onto the specified branch</p>
+<h2 is-upgraded>branch</h2>
+<p>The branch scope is used a lot. For submitting a pull request, navigation, editing your stack, etc.</p>
+<p><code>gt branch submit</code>: Create or update a GitHub pull request for the branch</p>
+<p><code>gt branch (un)track [branch]</code>: Enable/disable Graphite tracking the current or specified branch</p>
+<p><code>gt branch create</code>: Create a new branch stacked on top of the current branch and commit staged changes.</p>
+<h3 is-upgraded>Navigation</h3>
+<p><code>gt branch {up,down} [steps]</code>: Move up or down within the stack</p>
+<p><code>gt branch {top,t,bottom,b}</code>: Move to top or bottom branch of the stack</p>
+<p><code>gt branch checkout [branch]</code>: Checkout a branch, not specifying a branch will give interactive view</p>
+<h2 is-upgraded>commit</h2>
+<p><code>gt commit create</code>: Create a new commit and restack upstack branches</p>
+<p><code>gt commit amend</code>: Amend the most recent commit and restack upstack branches</p>
+<h2 is-upgraded>repo</h2>
+<p><code>gt repo init</code>: Create or regenerate a <code>.graphite_repo_config</code> file</p>
+<p><code>gt repo sync</code>: Pull the trunk branch and prune merged branches</p>
+<h2 is-upgraded>log</h2>
+<p><code>gt log</code>: Pretty verbose log with commits, ancestry and pull request status for each branch</p>
+<p><code>gt log short</code>, <code>gt ls</code>: More consice log which shows branches and their ancestry</p>
+<p><code>gt log long</code>, <code>gt ll</code>: Way too much info for my small brain</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Getting Started" duration="0">
+        <p>The Graphite Docs have a nice <a href="https://graphite.dev/docs/graphite-quick-start" target="_blank">quick start guide</a> to get you to started.</p>
+<p>Follow the <code>Creating the first branch in a stack</code> section and stop before <code>Getting started with the Graphite dashboard</code> to get the gist of basic Graphite usage.</p>
+<p>Play around with the stack of branches you made. Here are some things to try:</p>
+<ul>
+<li>Create another stack off of trunk</li>
+<li>Use <code>gt upstack onto</code> to rebase your first stack onto the newest one</li>
+<li>Use <code>gt commit amend -an</code> to amend a commit mid-stack and see changes propogate upstack</li>
+<li>Use <code>gt downstack edit</code> at the top of a stack to edit the order of branches</li>
+<li>Fold multiple branches into one with <code>gt branch fold</code></li>
+<li>Squash multiple commits on a branch into one with <code>gt branch squash</code></li>
+<li>Create a happy little rainbow tree by branching off multiple times from the same branch. Display it with <code>gt ls</code></li>
+</ul>
+<p><a href="assets/how-to-use-graphite/rainbow_tree.png" target="_blank">happy little rainbow tree</a></p>
+<p>Once you feel ready, you may want to try using <code>gt branch split</code> on one of your development branches. This will allow you to split the branch into multiple dependent branches, either by hunk or by commit.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
