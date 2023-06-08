@@ -50,7 +50,7 @@
 <p>And that&#39;s the problem. But that&#39;s not how code review should be.</p>
 <h2 is-upgraded>The Solution (aka El Problema)</h2>
 <p>The solution is somewhat obvious, and I&#39;m sure some of you do this already. Make a branch off of <code>feature_1_branch</code>, call it something clever like <code>feature_2_branch</code> and submit a pull request to merge feature_2 into feature_1. Cool, you&#39;re un-blocked.</p>
-<p>Except that&#39;s not the solution! I mean it is, but you still have giant pull requests and everyone that has to review your code still hates you. In an effort to be loved, you make them bite-sized. Cute little code snippets that are easy to review. And now your feature is composed of 30 branches, and you&#39;re in rebasing/merging hell when you try to implement feedback from those code reviews. <strong>El Problema!</strong></p>
+<p>Except that&#39;s not the solution! I mean it is, but you still have giant pull requests and everyone that has to review your code still hates you. In an effort to be loved, you make them bite-sized. Cute little code snippets that are easy to review. And now your feature is composed of 30 branches. Then when you try to implement the feedback from those code reviews, you&#39;re find youself in rebasing/merging hell. <strong>El Problema!</strong></p>
 
 
       </google-codelab-step>
@@ -69,7 +69,8 @@
       </google-codelab-step>
     
       <google-codelab-step label="Graphite Development Flow" duration="0">
-        <p><strong>Stop merging!</strong> You&#39;re a rebaser now.</p>
+        <p>So how does Graphite change how you code and develop features? Well you&#39;ll find it much easier if you follow these guidelines.</p>
+<p><strong>Stop merging!</strong> You&#39;re a rebaser now. Rebasing is destructive but it treats commits as a patch onto some other commit. So instead of bringing in more and more changes from other sources, your commit diff stays the same as long as you don&#39;t run into any conflicts.</p>
 <p><strong>Stop rebasing!</strong> Let Graphite handle all of that for you. It&#39;s helpful to understand the magic that Graphite is performing (especially if you mess something up), so learn a bit about rebasing if you haven&#39;t used it before.</p>
 <p><strong>Make small, digestible commits!</strong> Easy to review means easy to merge.</p>
 <p><strong>One commit per branch!</strong> Amend and squash are your friends. This may seem odd, but when you rebase/restack (which happens a lot when using Graphite) you may need to deal with some merge conflicts. The rebasing essentially patches each commit on top of each other, so the fewer commits which have conflicts, the less you&#39;ll have to deal with merge issues.</p>
