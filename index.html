@@ -43,14 +43,14 @@
       </google-codelab-step>
     
       <google-codelab-step label="The Problem" duration="2">
-        <h2 is-upgraded>The Problem</h2>
+        <h2 is-upgraded>Code review is annoying</h2>
 <p>Digesting a giant pull request can take a ton of time to contextualize what you&#39;re reviewing - especially if you have to context-switch mid-review.</p>
 <p>Feeling blocked because you want to work on a feature, but are waiting for your pull request to be merged into <code>main</code> also sucks.</p>
 <p>Often we&#39;ll end up submitting some <code>feature_1</code> that we want pushed through to <code>main</code>, so we can branch off of <code>main</code> again and keep working some on <code>feature_2</code> that is dependent on the earlier code. We&#39;re blocked, and so maybe we get a rushed review, especially if its a large chunk of code that no one wants to digest.</p>
 <p>And that&#39;s the problem. But that&#39;s not how code review should be.</p>
-<h2 is-upgraded>The Solution (aka El Problema)</h2>
+<h2 is-upgraded>Naive solution</h2>
 <p>The solution is somewhat obvious, and I&#39;m sure some of you do this already. Make a branch off of <code>feature_1_branch</code>, call it something clever like <code>feature_2_branch</code> and submit a pull request to merge feature_2 into feature_1. Cool, you&#39;re un-blocked.</p>
-<p>Except that&#39;s not the solution! I mean it is, but you still have giant pull requests and everyone that has to review your code still hates you. In an effort to be loved, you make them bite-sized. Cute little code snippets that are easy to review. And now your feature is composed of 30 branches. Then when you try to implement the feedback from those code reviews, you&#39;re find youself in rebasing/merging hell. <strong>El Problema!</strong></p>
+<p>Except that&#39;s not the solution! I mean it is, but you still have giant pull requests and everyone that has to review your code still hates you. In an effort to be loved, you make them bite-sized. Cute little code snippets that are easy to review. And now your feature is composed of 30 branches. Then when you try to implement the feedback from those code reviews, you find youself in <strong>rebasing/merging hell</strong>. In comes Graphite.</p>
 
 
       </google-codelab-step>
@@ -63,7 +63,7 @@
 <p>If your feature requires 30 small changes, then each of those changes will be its own branch, and you can structure those changes as a tree (often just a straight line of dependencies).</p>
 <p class="image-container"><img alt="a simple stack with 3" src="img/fa696cbddde4db5f.png"></p>
 <p>Above is a list of my branches which are tracked by graphite. I have one main stack with many branches, and two other experimental stacks which are just a single branch. When I develop a new part of my feature, I add it onto the top of the main stack. If I start some other project, I&#39;ll start a new stack off of main.</p>
-<p>The difference between this and <strong>El Problema</strong> (rebase hell), is that if you make a change somewhere in the middle of your stack, Graphite will <em>restack</em> all of the branches which are <em>upstack</em> of that change. Essentially, it does all of that tedious rebasing for you, propagating changes upwards through the stack.</p>
+<p>The difference between this and <strong>Rebase Hell</strong>, is that if you make a change somewhere in the middle of your stack, Graphite will <em>restack</em> all of the branches which are <em>upstack</em> of that change. Essentially, it does all of that tedious rebasing for you, propagating changes upwards through the stack.</p>
 
 
       </google-codelab-step>
@@ -115,7 +115,7 @@
 </ul>
 <p><code>gt {stack,upstack,downstack} submit</code>: Create linked pull requests for all of the branches in the specified scope</p>
 <p><code>gt {stack,upstack,downstack} restack</code>: Ensure each branch in the scope is based on its parent, rebasing if necessary</p>
-<p><code>gt upstack onto [branch]</code>: Rebase the current branch and its ancestors onto the specified branch</p>
+<p><code>gt upstack onto [branch]</code>: Rebase the current branch and its descendants onto the specified branch</p>
 <h2 is-upgraded>branch</h2>
 <p>The branch scope is used a lot. For submitting a pull request, navigation, editing your stack, etc.</p>
 <p><code>gt branch submit</code>: Create or update a GitHub pull request for the branch</p>
